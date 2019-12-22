@@ -11,11 +11,17 @@ const SOUND_ON = 3
 const INTERVAL_NOT_SET = -2
 const INTERVAL_DEFAULT = 2000
 
+const SERVER_AUDIO_OFF = 'AUDIO_OFF'
+const SERVER_AUDIO_ON = 'AUDIO_ON'
+
 // init variables
 poll_interval = INTERVAL_DEFAULT
 sound_output = SOUND_OFF
 extension_status = EXT_NOT_SET
 total_tabs = 0
+localhost_port = 50000
+url = `http://localhost:${localhost_port}/audio_manager`
+
 
 // Two Way Communication with popup.js
 chrome.extension.onConnect.addListener(function (port) {
@@ -60,12 +66,27 @@ chrome.extension.onConnect.addListener(function (port) {
     // Callback function for chrome.query
     function soundOff(results) {
 
+        let params = {}
+
         // If total number of non sound tabs == total tabs then...
         if (results.length == total_tabs) {
             sound_output = SOUND_OFF
+
+            params.status = SERVER_AUDIO_OFF
         } else {
             sound_output = SOUND_ON
+
+            params.status = SERVER_AUDIO_ON
         }
+
+        let url_object = new URL(url)
+
+        url_object.search = new URLSearchParams(params).toString()
+
+        console.info("Sending request...")
+        fetch(url_object).then(data => data.text()).then((text) => {
+            console.log(`Response: ${text}`)
+        })
 
         console.log('Sound: ' + sound_output)
     }

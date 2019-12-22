@@ -1,6 +1,12 @@
+from flask import Flask, request
 from pycaw.pycaw import AudioUtilities
 
-audio_controller = None
+app = Flask(__name__)
+
+AUDIO_OFF = 'AUDIO_OFF'
+AUDIO_ON = 'AUDIO_ON'
+
+CURRENT_PROCESS_VOLUME = -1
 
 class AudioController(object):
     def __init__(self, process_name):
@@ -62,26 +68,28 @@ class AudioController(object):
                 print('Volume raised to', self.volume)  # debug
 
 
-def main():
-    init()
-    mute_audio_from_process()
-    # audio_controller.decrease_volume(0.25)
-    # audio_controller.increase_volume(0.05)
-    # audio_controller.unmute()
+# from .main import *
 
+@app.route('/audio_manager/')
+def manipulate_volume():
+    # audio_controller.mute()
 
-def init():
-    global audio_controller
+    chrome_audio_status = request.args.get('status', AUDIO_OFF)
+    
+    if chrome_audio_status == AUDIO_ON:
+        audio_controller.mute()
+
+        return "Muted."
+
+    elif chrome_audio_status == AUDIO_OFF:
+       audio_controller.unmute() 
+
+       return "Unmuted."
+
+    return "Hola ${}".format(request.args.get('hello'))
+
+if __name__ == '__main__':
+
     audio_controller = AudioController('Music.UI.exe')
 
-def mute_audio_from_process():
-    global audio_controller
-    # audio_controller.set_volume(1.0)
-    audio_controller.mute()
-
-def increase_audio_from_process():
-    global audio_controller
-    audio_controller.set_volume(20)
-
-if __name__ == "__main__":
-    main()
+    app.run(port=50000)
