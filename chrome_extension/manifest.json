@@ -1,7 +1,7 @@
 {
     "name": "Audio Manager Helper",
     "version": "0.1",
-    "permissions": ["tabs"],
+    "permissions": ["tabs", "storage"],
     "description": "Manage Audio Automatically.",
     "background": {
         "scripts": ["background.js"],
