@@ -1,30 +1,56 @@
 console = chrome.extension.getBackgroundPage().console
 
+// constants declaration
+const EXT_NOT_SET = -1
+const EXT_OFF = 0
+const EXT_ON = 1
+
+const SOUND_OFF = 2
+const SOUND_ON = 3
+
+const INTERVAL_NOT_SET = -2
+const INTERVAL_DEFAULT = 2000
+
+// init variables
+poll_interval = INTERVAL_DEFAULT
+sound_output = SOUND_OFF
+extension_status = EXT_NOT_SET
+total_tabs = 0
+
 // Two Way Communication with popup.js
 chrome.extension.onConnect.addListener(function (port) {
     console.log("Connected ...");
 
     port.onMessage.addListener(function (msg) {
         console.log("message recieved" + msg);
-        port.postMessage("Hi Popup.js");
+        // port.postMessage("Hi Popup.js");
+
+        if (typeof msg == 'object') {
+            if ('UPDATE' in msg) {
+                console.log("Updating below value:")
+
+                if ('EXT_STATUS' in msg) {
+                    console.log("Recieved message contains EXT_STATUS")
+                    write_to_storage('EXT_STATUS', msg.EXT_STATUS, () => {
+                        extension_status = msg.EXT_STATUS
+
+                        if (msg.EXT_STATUS == EXT_ON) {
+                            console.info('Started mainLoop() from the message listener.')
+                            mainLoop()
+                        }
+                    })
+                }
+
+                if ('POLL_INTERVAL' in msg) {
+                    console.log("Recieved message contains POLL_INTERVAL")
+                    write_to_storage('POLL_INTERVAL', Number(msg.POLL_INTERVAL), () => {
+                        poll_interval = Number(msg.POLL_INTERVAL)
+                        console.log("New Interval updated to: " + poll_interval)
+                    })
+                }
+            }
+        }   
     });
-
-    // constants declaration
-    const EXT_NOT_SET = -1
-    const EXT_OFF = 0
-    const EXT_ON = 1
-
-    const SOUND_OFF = 2
-    const SOUND_ON = 3
-
-    const INTERVAL_NOT_SET = -2
-    const INTERVAL_DEFAULT = 2000
-
-    // init variables
-    poll_interval = INTERVAL_DEFAULT
-    sound_output = SOUND_OFF
-    extension_status = EXT_NOT_SET
-    total_tabs = 0
 
     function update_total_tabs(results) {
         total_tabs = results.length
@@ -44,11 +70,12 @@ chrome.extension.onConnect.addListener(function (port) {
         console.log('Sound: ' + sound_output)
     }
 
+    // FIXME: Loop starts again on opening extension
     function mainLoop() {
 
-        if (extension_status == EXT_OFF) return;
-
         setTimeout(function () { // Run forever
+
+            if (extension_status == EXT_OFF) return;
 
             chrome.tabs.query({}, update_total_tabs)
 
@@ -61,8 +88,57 @@ chrome.extension.onConnect.addListener(function (port) {
         }, poll_interval)
     }
 
+    function write_to_storage(key, value, callback = undefined) {
+        // if (typeof value != "undefined") {
 
-    function update_values_from_storage() {
+            // if (typeof callback == "undefined") {
+                console.log("Proceeding to set value in storage without callback.")
+
+                chrome.storage.local.set({[`${key}`]: value}, () => {
+                    console.log(`chrome.storage: set ${key} = ${value}`)
+
+                    console.log("Trying to retrieve the same value...")
+
+                    chrome.storage.local.get([`${key}`], (_) => {
+                        console.log(`Retreived: ${_}`)
+                        console.log(_)
+
+                        console.assert(value == _[`${key}`], 'Assertion.')
+                    })
+                })
+            // }
+
+            // else {
+                console.log("Proceeding to set value in storage with callback.")
+                chrome.storage.local.set({[`${key}`]: value}, callback)
+            // }
+
+            return;
+        // }
+
+        // else {
+        //     if (typeof callback == "undefined") {
+        //         throw Error("Callback required for getting value.")
+        //     }
+
+        //     else {
+        //         if (typeof defaultValue == "undefined") {
+        //             chrome.storage.local.get([key], callback)
+        //         }
+
+        //         else {
+        //             chrome.storage.local.get({key: defaultValue}, callback)
+        //         }
+        //     }
+
+        //     return;
+        // }
+    }
+
+    function init_values_from_storage() {
+        
+        // TODO MakeUseOf our own storage api which is insane.
+        // AND FUCCCKINNGG DOESN'T WORKKKK
         chrome.storage.local.get({'EXT_STATUS': EXT_NOT_SET} , (data) => {
             if (data.EXT_STATUS == EXT_NOT_SET) {
                 chrome.storage.local.set({'EXT_STATUS': EXT_OFF}, () => {
@@ -77,6 +153,9 @@ chrome.extension.onConnect.addListener(function (port) {
             port.postMessage({
                 'EXT_STATUS': data.EXT_STATUS
             })
+
+            console.log("Sent message about ext_status.")
+
         })
 
         chrome.storage.local.get({'POLL_INTERVAL': INTERVAL_NOT_SET}, (data) => {
@@ -93,15 +172,25 @@ chrome.extension.onConnect.addListener(function (port) {
             port.postMessage({
                 'POLL_INTERVAL': data.POLL_INTERVAL
             })
+
+            console.log("Sent message about interval.")
         })
     }
 
+    init_values_from_storage()
 
-
-    update_values_from_storage()
-
+    mainLoop()
     
+    // chrome.storage.local.get({EXT_STATUS: EXT_NOT_SET}, (data) => {
+    //     if (data.EXT_STATUS == EXT_NOT_SET) {
+    //         console.error("Well, that's an error. Init EXT_STATUS and try again maybe?")
+    //     }
 
-    mainLoop();
+    //     else if (data.EXT_STATUS == EXT_OFF) {
+
+    //     }
+
+    //     console.log("Attempted to start loop but lol :p")
+    // })
 
 })
