@@ -1,10 +1,13 @@
 from flask import Flask, request
 from pycaw.pycaw import AudioUtilities
+import numpy as np
 
 app = Flask(__name__)
 
 AUDIO_OFF = 'AUDIO_OFF'
 AUDIO_ON = 'AUDIO_ON'
+
+CURRENT_STATE = AUDIO_ON
 
 CURRENT_PROCESS_VOLUME = -1
 
@@ -73,23 +76,46 @@ class AudioController(object):
 @app.route('/audio_manager/')
 def manipulate_volume():
     # audio_controller.mute()
+    global CURRENT_PROCESS_VOLUME
+    global CURRENT_STATE
 
     chrome_audio_status = request.args.get('status', AUDIO_OFF)
     
     if chrome_audio_status == AUDIO_ON:
-        audio_controller.mute()
 
-        return "Muted."
+        if CURRENT_STATE == AUDIO_ON:
+            
+            CURRENT_PROCESS_VOLUME = audio_controller.process_volume()
+
+            print("Current Volume: {}".format(CURRENT_PROCESS_VOLUME))
+
+            for i in np.linspace(CURRENT_PROCESS_VOLUME, 0.0, 40):
+                print("i: {}".format(i))
+                audio_controller.set_volume(i)
+
+            CURRENT_STATE = AUDIO_OFF
+
+            return "Muted."
 
     elif chrome_audio_status == AUDIO_OFF:
-       audio_controller.unmute() 
+    #    audio_controller.unmute() 
+        if CURRENT_STATE == AUDIO_OFF:
+            print("CURRENT_PRO_VOL: {}".format(CURRENT_PROCESS_VOLUME))
 
-       return "Unmuted."
+            for i in np.linspace(0, CURRENT_PROCESS_VOLUME, 40):
+                    print("i: {}".format(i))
+                    audio_controller.set_volume(i)
+
+            CURRENT_STATE = AUDIO_ON
+
+            return "Unmuted."
 
     return "Hola ${}".format(request.args.get('hello'))
 
 if __name__ == '__main__':
 
     audio_controller = AudioController('Music.UI.exe')
+
+    CURRENT_PROCESS_VOLUME = audio_controller.process_volume()
 
     app.run(port=50000)
