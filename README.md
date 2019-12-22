@@ -18,3 +18,4 @@ A utility to automatically manage the volume of any process with regards to the 
 - Add a GUI to the flask server.
 - Update Readme.
 - Make a clean folder structure for chrome extension.
+- Add License
