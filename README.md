@@ -13,6 +13,7 @@ A utility to automatically manage the volume of any process with regards to the 
 ### TODO:
 
 - Pack the extension.
+- Add error box in extension in case of any errors
 - Make the extension choose the name of the process to manipulate the volume of.
 - Keep a settings page for extension.
 - Add a GUI to the flask server.
