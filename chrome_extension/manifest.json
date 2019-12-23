@@ -4,6 +4,7 @@
     "permissions": [
         "tabs", 
         "storage",
+        "notifications",
         "http://localhost/*"
     ],
     "description": "Manage Audio Automatically.",

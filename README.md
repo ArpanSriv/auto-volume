@@ -23,6 +23,7 @@ Note: Currently the name of the process 'Music.UI.exe' (Groove Music) is hardcod
 - [ ] Update Readme.
 - [ ] Make a clean folder structure for chrome extension.
 - [ ] Other OS Support.
+- [x] Switch off extension if the server is not running.
 - [x] Add License
 
 ## Note: Works on Windows only.

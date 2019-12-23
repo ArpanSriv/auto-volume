@@ -8,7 +8,6 @@ const SOUND_ON = 3
 const INTERVAL_NOT_SET = -2
 const INTERVAL_DEFAULT = 2000
 
-
 extension_status = EXT_OFF
 poll_interval = INTERVAL_DEFAULT
 
@@ -17,6 +16,10 @@ $extension_status_checkbox = $('#extension-status-checkbox')
 $interval_input = $('#interval-input')
 
 function update_extension_status_toggle(new_status) {
+
+    console.log("Updating checkbox status to: " + new_status)
+
+    extension_status = new_status
 
     if (new_status == EXT_ON) {
         $extension_status_checkbox.prop('checked', false)
@@ -52,6 +55,35 @@ port.onMessage.addListener(function (msg) {
         console.log(`Message recieved: interval = ${poll_interval}`)
 
         update_interval_value(poll_interval)
+    }
+
+    if ('UPDATE' in msg) {
+
+        console.log("Recieved UPDATE message.")
+
+        // Read value of UPDATE
+        if (msg.UPDATE == 'EXT_CHECKBOX') {
+
+            // FIXME: Implement message passing from here to backgound.js
+            // Functions can't be sent as a parameter since the object 
+            // has to be serializable. Use a library (GSerializable) to fix
+            // this. 
+            // Right now just reading the value from the storage and updating 
+            // as needed.
+
+
+            // message = {
+            //     'READ': 'EXT_STATUS',
+            //     'CALLBACK': update_extension_status_toggle
+            // }
+
+            // // Send a message to background.js querying
+            // port.postMessage(message)
+        }
+        
+        console.log("popup.js => Reading value from chrome.storage.")
+        chrome.storage.local.get('EXT_STATUS', (value) => update_extension_status_toggle(value.EXT_STATUS))
+        
     }
 });
 
@@ -94,6 +126,6 @@ $interval_input.on('input', function (e) {
 
 });
 
-for (i = 0; i < 100; i++) {
-    port.postMessage("Hi Background");
-}
+// for (i = 0; i < 100; i++) {
+//     port.postMessage("Hi Background");
+// }

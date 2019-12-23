@@ -31,7 +31,7 @@ chrome.extension.onConnect.addListener(function (port) {
         console.log("message recieved" + msg);
         // port.postMessage("Hi Popup.js");
 
-        if (typeof msg == 'object') {
+        // if (typeof msg == 'object') {
             if ('UPDATE' in msg) {
                 console.log("Updating below value:")
 
@@ -55,7 +55,12 @@ chrome.extension.onConnect.addListener(function (port) {
                     })
                 }
             }
-        }   
+
+            if ('READ' in msg) {
+                console.log("Recieved message contains READ")
+                read_storage(msg.READ, msg.CALLBACK)
+            }
+        // }   
     });
 
     function update_total_tabs(results) {
@@ -84,9 +89,39 @@ chrome.extension.onConnect.addListener(function (port) {
         url_object.search = new URLSearchParams(params).toString()
 
         console.info("Sending request...")
-        fetch(url_object).then(data => data.text()).then((text) => {
-            console.log(`Response: ${text}`)
-        })
+        
+        fetch(url_object)
+            .then(data => data.text())
+            .then((text) => console.log(`Response: ${text}`))
+            .catch((error) => {
+                console.error("Fetch failed. Is the server running on the correct port?")
+
+                // Show notification
+                chrome.notifications.create(
+                    "chrome-auto-volume-error",
+                    {
+                        type: "basic",
+                        iconUrl: 'software.png',
+                        title: 'Auto Volume Manager',
+                        message: 'Failed to connect to the main application. Is the server running?',
+                        contextMessage: 'Switching off the extension.',
+                        priority: 2
+                    },
+                    (notification_id) => console.log("Notification Shown.")
+                )
+                // Stop the extension
+                write_to_storage('EXT_STATUS', EXT_OFF, () => {
+                    extension_status = EXT_OFF
+
+                    console.info('Stopped extension: ' + error)
+                })
+
+                // Send message to popup.js to change the checkbox state
+                console.log("Sending message to popup.js to update the checkbox state.")
+                port.postMessage({
+                    'UPDATE': 'EXT_CHECKBOX'
+                })
+            })
 
         console.log('Sound: ' + sound_output)
     }
@@ -109,10 +144,24 @@ chrome.extension.onConnect.addListener(function (port) {
         }, poll_interval)
     }
 
+    // TODO: Add a default value param
+    // Just a wrapper for chrome.storage.local
+    function read_storage(key, callback) {
+        
+        console.log(`Reading value of ${key}`)
+
+        chrome.storage.local.get([`${key}`], (value) => {
+            console.log("read_storage: Calling read_storage callback provided.")
+            console.log(callback)
+            callback(value)
+        })
+
+    }
+
     function write_to_storage(key, value, callback = undefined) {
         // if (typeof value != "undefined") {
 
-            // if (typeof callback == "undefined") {
+            if (callback == undefined) {
                 console.log("Proceeding to set value in storage without callback.")
 
                 chrome.storage.local.set({[`${key}`]: value}, () => {
@@ -127,12 +176,12 @@ chrome.extension.onConnect.addListener(function (port) {
                         console.assert(value == _[`${key}`], 'Assertion.')
                     })
                 })
-            // }
+            }
 
-            // else {
+            else {
                 console.log("Proceeding to set value in storage with callback.")
                 chrome.storage.local.set({[`${key}`]: value}, callback)
-            // }
+            }
 
             return;
         // }

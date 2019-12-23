@@ -1,2 +1,3 @@
+0.1.2 Extension turns off if the server is not runnnig.
 0.1.1 Added Crossfade
 0.1.0 Initial Development Release
