@@ -20,3 +20,7 @@ A utility to automatically manage the volume of any process with regards to the 
 - Update Readme.
 - Make a clean folder structure for chrome extension.
 - Add License
+- Other OS Support.
+
+## Note: 
+This currently works on Windows only.
