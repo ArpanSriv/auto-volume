@@ -39,4 +39,8 @@ A utility to automatically manage the volume of any process with regards to the 
 ## Contributions: 🎁
 Contributions are most welcome. Fork the repo and submit a pull request.
 
+## Donations:
+[Click Here](https://paypal.me/arpansrivastav) to donate.
+
+
 ## License: [MIT License](LICENSE) 
