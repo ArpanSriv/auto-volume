@@ -17,18 +17,22 @@ A utility to automatically manage the volume of any process with regards to the 
 
 ## TODO: ✅
 
-- [ ] Add tests 🔴
-- [ ] Add error box in extension in case of any errors. 🟡
-- [ ] Make the extension choose the name of the process to manipulate the volume of. 🔴
-- [ ] Keep a settings page for extension. 🟡
-    - [ ] Add Option to add more ports
-- [ ] Add a GUI to the flask server. 🔴
-- [ ] Make a clean folder structure for chrome extension. 🟡
-- [ ] Other OS Support. 🟡
-- [ ] Pack the extension. 🟡
-- [x] Added support for changing process name using command line args. 🟢 
-- [x] Switch off extension if the server is not running. 🟢
-- [x] Add License. 🟢
+| Status                 | Task                                                                           | Priority |
+|------------------------|--------------------------------------------------------------------------------|----------|
+| <ul><li>[ ] </li></ul> | Add tests                                                                      | 🔴       |
+| <ul><li>[ ] </li></ul> | Add error box in extension in case of any errors.                              | 🟡       |
+| <ul><li>[ ] </li></ul> | Make the extension choose the name of the process to manipulate the volume of. | 🔴       |
+| <ul><li>[ ] </li></ul> | Keep a settings page for extension.                                            | 🟡       |
+| <ul><li>[ ] </li></ul> | Add a GUI to the flask server.                                                 | 🔴       |
+| <ul><li>[ ] </li></ul> | Make a clean folder structure for chrome extension.                            | 🟡       |
+| <ul><li>[ ] </li></ul> | Other OS Support.                                                              | 🟡       |
+| <ul><li>[ ] </li></ul> | Pack the extension.                                                            | 🟡       |
+| <ul><li>[ ] </li></ul> | Message Passing in port.postMessage (need serialization)                       | 🟡       |
+| <ul><li>[x] </li></ul> | Added support for changing process name using command line args.               | 🟢       |
+| <ul><li>[x] </li></ul> | Switch off extension if the server is not running.                             | 🟢       |
+| <ul><li>[x] </li></ul> | Add License.                                                                   | 🟢       |
+
+
 
 ## Note: Works on Windows only.
 
