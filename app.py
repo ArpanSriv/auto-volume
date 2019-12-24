@@ -1,6 +1,7 @@
 from flask import Flask, request
 from pycaw.pycaw import AudioUtilities
 import numpy as np
+import sys
 
 app = Flask(__name__)
 
@@ -114,7 +115,9 @@ def manipulate_volume():
 
 if __name__ == '__main__':
 
-    audio_controller = AudioController('Music.UI.exe')
+    # Error handling for the sys.argv
+
+    audio_controller = AudioController(sys.argv[1])
 
     CURRENT_PROCESS_VOLUME = audio_controller.process_volume()
 

@@ -7,11 +7,13 @@ A utility to automatically manage the volume of any process with regards to the 
 
 1. Install the unpacked extension from the [chrome_extension](chrome_extension) directory.
 
-2. Start the flask server by running 'python app.py' and not 'flask run'.
+2. Start the flask server by running 'python app.py [process_name.exe]' and not 'flask run'. { Example: python app.py Spotify.exe }
 
 3. Turn the extension on.
 
-Note: Currently the name of the process 'Music.UI.exe' (Groove Music) is hardcoded. Change it in [app.py](app.py) in the main function.
+~~Note: Currently the name of the process 'Music.UI.exe' (Groove Music) is hardcoded. Change it in [app.py](app.py) in the main function.~~
+
+☑ You can now change the process name by providing the process name from the command line.
 
 ## TODO: ✅
 
@@ -24,6 +26,7 @@ Note: Currently the name of the process 'Music.UI.exe' (Groove Music) is hardcod
 - [ ] Make a clean folder structure for chrome extension. 🟡
 - [ ] Other OS Support. 🟡
 - [ ] Pack the extension. 🟡
+- [x] Added support for changing process name using command line args. 🟢 
 - [x] Switch off extension if the server is not running. 🟢
 - [x] Add License. 🟢
 
