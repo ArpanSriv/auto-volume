@@ -1,4 +1,5 @@
 # chrome-auto-volume
+[![HitCount](http://hits.dwyl.io/ArpanSriv/auto-volume.svg)](http://hits.dwyl.io/ArpanSriv/auto-volume)
 
 A utility to automatically manage the volume of any process with regards to the chrome volume. (That is the volume of the process reduces if something is being played in chrome.)
 
