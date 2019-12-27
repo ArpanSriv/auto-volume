@@ -1,5 +1,6 @@
 # chrome-auto-volume
 [![HitCount](http://hits.dwyl.io/ArpanSriv/auto-volume.svg)](http://hits.dwyl.io/ArpanSriv/auto-volume)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FArpanSriv%2Fauto-volume.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FArpanSriv%2Fauto-volume?ref=badge_shield)
 
 A utility to automatically manage the volume of any process with regards to the chrome volume. (That is the volume of the process reduces if something is being played in chrome.)
 
@@ -44,3 +45,6 @@ Contributions are most welcome. Fork the repo and submit a pull request.
 
 
 ## License: [MIT License](LICENSE) 
+
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FArpanSriv%2Fauto-volume.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FArpanSriv%2Fauto-volume?ref=badge_large)
