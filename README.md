@@ -44,3 +44,5 @@ Contributions are most welcome. Fork the repo and submit a pull request.
 
 
 ## License: [MIT License](LICENSE) 
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FArpanSriv%2Fauto-volume.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FArpanSriv%2Fauto-volume?ref=badge_large)
